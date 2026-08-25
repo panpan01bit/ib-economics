@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IB Economics 学习地图 · HL/SL 知识图谱</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">E</div>
+        <div>
+          <h1>IB Economics</h1>
+          <small>知识树 · 图谱 · 真题库</small>
+        </div>
+      </div>
+      <a href="hub.html#/s/ib-econ/overview" style="display:block;margin:0 10px 10px;padding:8px 12px;border-radius:10px;background:var(--coral-soft);color:#be123c;font-size:13px;font-weight:600">🗺️ 学习地图 · 五科目 + 赛代学</a>
+      <nav class="nav" id="nav">
+        <a href="#/overview" data-view="overview"><span class="ico">🏠</span>总览 Overview</a>
+        <a href="#/tree" data-view="tree"><span class="ico">🌳</span>知识树 Knowledge Tree</a>
+        <a href="#/graph" data-view="graph"><span class="ico">🕸️</span>知识图谱 Graph</a>
+        <a href="#/hlsl" data-view="hlsl"><span class="ico">⚖️</span>HL vs SL 对照</a>
+        <a href="#/glossary" data-view="glossary"><span class="ico">📖</span>术语表 Glossary</a>
+        <a href="#/papers" data-view="papers"><span class="ico">📝</span>真题库 Past Papers</a>
+        <a href="#/ia" data-view="ia"><span class="ico">✍️</span>IA 示例库</a>
+        <a href="#/textbooks" data-view="textbooks"><span class="ico">📚</span>教材原文 Textbooks</a>
+        <a href="#/diagrams" data-view="diagrams"><span class="ico">📈</span>图表解析与训练 Diagrams</a>
+        <a href="#/charts" data-view="charts"><span class="ico">📊</span>数据分析 Charts</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2 id="page-title">总览</h2>
+        <span class="sub" id="page-sub"></span>
+        <div class="search">
+          <span class="mag">🔍</span>
+          <input id="search-input" type="text" placeholder="搜索主题 / 术语 / 真题（中英双语）…">
+          <div class="search-results" id="search-results" style="display:none"></div>
+        </div>
+      </header>
+      <div id="view"><div class="spin">加载数据中…</div></div>
+    </main>
+  </div>
+
+  <script src="assets/echarts.min.js"></script>
+  <script src="js/app.js?v=5"></script>
+</body>
+</html>

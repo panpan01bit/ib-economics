@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>国际课程学习地图 · 经济 × 商科 × 竞赛</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .subj-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .subj-tab {
+      padding: 9px 16px; border-radius: 12px; border: 1.5px solid var(--line);
+      background: #fff; cursor: pointer; font-size: 14px; font-weight: 600;
+      color: var(--ink-2); transition: all .15s; display: flex; gap: 8px; align-items: center;
+    }
+    .subj-tab:hover { border-color: var(--brand); color: var(--brand); }
+    .subj-tab.on { color: #fff; border-color: transparent; box-shadow: 0 6px 16px rgba(20,184,166,.25); }
+    .subj-tab .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .quiz-opt {
+      background: var(--surface-2); border: 1.5px solid var(--line); padding: 12px 15px;
+      cursor: pointer; font-size: 14px; border-radius: 10px; transition: all .12s;
+    }
+    .quiz-opt:hover { border-color: var(--brand); }
+    .quiz-opt.correct { background: var(--sl-soft); border-color: #10b981; }
+    .quiz-opt.wrong { background: var(--coral-soft); border-color: #ef4444; }
+    .tip-box {
+      background: var(--sky-soft); border-radius: 10px; padding: 10px 14px;
+      font-size: 13px; color: #075985; margin: 6px 0;
+    }
+    .unit-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+      padding: 16px 18px; box-shadow: var(--shadow-sm); }
+    .topic-row { display: flex; align-items: flex-start; gap: 8px; padding: 9px 4px;
+      border-bottom: 1px dashed var(--line); cursor: pointer; }
+    .topic-row:hover { background: var(--surface-2); }
+    .topic-row:last-child { border-bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo" id="brand-logo">学</div>
+        <div>
+          <h1 id="brand-title">学习地图</h1>
+          <small id="brand-sub">经济 · 商科 · 竞赛</small>
+        </div>
+      </div>
+      <nav class="nav" id="nav"></nav>
+      <div style="margin-top:18px;padding:10px 12px;border-top:1px solid var(--line)">
+        <a href="index.html#/overview" style="font-size:12.5px" id="deep-link">→ 进入 IB 经济完整站（真题/教材/图谱）</a>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2 id="page-title">总览</h2>
+        <span class="sub" id="page-sub"></span>
+      </header>
+      <div class="subj-tabs" id="subj-tabs"></div>
+      <div id="view"><div class="spin">加载数据中…</div></div>
+    </main>
+  </div>
+
+  <script src="assets/echarts.min.js"></script>
+  <script src="js/hub.js?v=5"></script>
+</body>
+</html>
