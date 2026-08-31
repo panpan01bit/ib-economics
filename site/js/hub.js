@@ -69,6 +69,8 @@
     ["guide", "💡", "答题指南 Exam Guide"],
     ["diagrams", "📈", "图表解析 Diagrams"],
     ["glossary", "📖", "术语表 Glossary"],
+    ["models", "🧰", "模型工具箱 Models"],
+    ["examq", "🗂️", "常见考题 Exam Bank"],
     ["quiz", "🎯", "练习问答 Quiz"],
     ["papers", "📝", "真题库 Papers"],
     ["iaee", "✍️", "IA·EE·大题写作"],
@@ -82,6 +84,8 @@
     tree: ["知识树", "单元 → 主题，点击展开详情"],
     guide: ["答题指南", "各主题考点 · 易错点 · 图表"],
     glossary: ["术语表", "英中对照 · 可搜索"],
+    models: ["模型工具箱", "商业模型 · 结构 · IG/AL 考法 · 竞赛应用 · 本地课件指引"],
+    examq: ["常见考题", "真题切片 · 官方答案要点 · 典型题解析"],
     quiz: ["练习问答", "选择题自测 · 即时解析"],
     papers: ["真题库", "题目 · 评分方案 · 考官报告 · 考点频次"],
     iaee: ["IA·EE·大题写作", "结构模板 · 评分标准 · 常见失分"],
@@ -132,7 +136,8 @@
 
   function renderNav(view) {
     const items = NAV.filter(([id]) => id !== "papers" || curId === "igcse-bus")
-      .filter(([id]) => id !== "progression" || curId === "igcse-bus" || curId === "al-bus");
+      .filter(([id]) => id !== "progression" || curId === "igcse-bus" || curId === "al-bus")
+      .filter(([id]) => id !== "models" || (cur.models && cur.models.length));
     $("#nav").innerHTML = items.map(([id, ico, label]) => `
       <a href="#/s/${curId}/${id}" class="${view === id ? "active" : ""}">
         <span class="ico">${ico}</span>${label}</a>`).join("");
@@ -146,6 +151,8 @@
       case "tree": renderTree(el, arg); break;
       case "guide": renderGuide(el); break;
       case "glossary": renderGlossary(el, arg); break;
+      case "models": renderModels(el, arg); break;
+      case "examq": renderExamq(el, arg); break;
       case "quiz": renderQuiz(el); break;
       case "papers": renderPapers(el); break;
       case "iaee": renderIaee(el); break;
@@ -385,6 +392,190 @@
         const b = h.parentElement.querySelector(".gloss-body");
         b.style.display = b.style.display === "none" ? "block" : "none";
       }));
+  }
+
+  // ------------------------------------------------------------------ models
+  const CAT_ICON = {"环境与战略": "🧭", "营销": "📣", "财务决策": "💰", "组织与领导": "👥",
+                    "运营与质量": "⚙️", "决策工具": "⚖️", "创业与商业模式": "🚀"};
+  const CAT_COLOR = {"环境与战略": "#0ea5e9", "营销": "#ec4899", "财务决策": "#f59e0b",
+                     "组织与领导": "#8b5cf6", "运营与质量": "#14b8a6", "决策工具": "#64748b",
+                     "创业与商业模式": "#ef4444"};
+
+  function modelTopicLinks(m) {
+    return Object.entries(m.topics || {}).map(([sid, tids]) =>
+      tids.map((tid) => {
+        const s = subjOf(sid) || {};
+        const color = s.accent || "#14b8a6";
+        return `<a href="#/s/${sid}/tree/${encodeURIComponent(tid)}" class="badge"
+                   style="background:${color}1e;color:${color};text-decoration:none">${esc(SUBJ_SHORT_HUB[sid] || s.name_zh || sid)} ${esc(tid)}</a>`;
+      }).join(" ")).join(" ");
+  }
+
+  function modelCard(m, open) {
+    const color = CAT_COLOR[m.cat] || "#14b8a6";
+    const body = `
+      <div style="font-size:13.5px;line-height:1.65;margin-top:2px">${esc(m.one)}</div>
+      ${m.draw ? `<div style="margin-top:7px;font-size:12.5px;color:var(--ink-2)"><b style="color:${color}">📐 怎么画</b>　${esc(m.draw)}</div>` : ""}
+      ${m.steps && m.steps.length ? `<div style="margin-top:6px;font-size:12.5px"><b style="color:${color}">🪜 使用步骤</b><ol style="margin:4px 0 0 18px;padding:0">${m.steps.map((s) => `<li style="margin:2px 0">${esc(s)}</li>`).join("")}</ol></div>` : ""}
+      ${m.formula ? `<div style="margin-top:7px;font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#0f172a0a;border:1px dashed ${color}55;border-radius:8px;padding:7px 10px">${esc(m.formula)}</div>` : ""}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+        <div style="font-size:12.5px;line-height:1.6"><b style="color:#10b981">✅ 优势</b><ul style="margin:3px 0 0 16px;padding:0">${(m.pros || []).map((x) => `<li style="margin:2px 0">${esc(x)}</li>`).join("")}</ul></div>
+        <div style="font-size:12.5px;line-height:1.6"><b style="color:#ef4444">⚠️ 局限</b><ul style="margin:3px 0 0 16px;padding:0">${(m.cons || []).map((x) => `<li style="margin:2px 0">${esc(x)}</li>`).join("")}</ul></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr;gap:6px;margin-top:8px">
+        ${m.ig ? `<div style="font-size:12.5px;line-height:1.6;border-left:3px solid #ec4899;padding-left:8px"><b>IG 考法</b>　${esc(m.ig)}</div>` : ""}
+        ${m.al ? `<div style="font-size:12.5px;line-height:1.6;border-left:3px solid #f59e0b;padding-left:8px"><b>AL 深度</b>　${esc(m.al)}</div>` : ""}
+        ${m.comp ? `<div style="font-size:12.5px;line-height:1.6;border-left:3px solid #ef4444;padding-left:8px"><b>竞赛应用</b>　${esc(m.comp)}</div>` : ""}
+      </div>
+      ${m.example ? `<div style="margin-top:7px;font-size:12.5px;color:var(--ink-2)"><b style="color:#f59e0b">💡 例</b>　${esc(m.example)}</div>` : ""}
+      ${m.exam ? `<div style="margin-top:5px;font-size:12.5px"><b style="color:#8b5cf6">📝 真题问法</b>　${esc(m.exam)}</div>` : ""}
+      ${Object.keys(m.topics || {}).length ? `<div style="margin-top:7px;font-size:12.5px"><b style="color:#0ea5e9">🔗 关联知识点</b>　${modelTopicLinks(m)}</div>` : ""}
+      ${(m.res || []).length ? `<div style="margin-top:6px;font-size:12px;color:var(--ink-2)"><b>📁 本地课件</b>　${m.res.map((r) => `<span class="badge" style="background:#f1f5f9;color:#475569;font-weight:400">${esc(r)}</span>`).join(" ")}</div>` : ""}
+    `;
+    return `
+      <div class="model-item" style="border-bottom:1px solid var(--line);padding:10px 2px" data-id="${esc(m.id)}">
+        <div class="model-head" style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;cursor:pointer">
+          <b>${esc(m.en)}</b><span class="muted">${esc(m.zh)}</span>
+          <span class="badge" style="background:${color}1a;color:${color}">${esc((CAT_ICON[m.cat] || "") + " " + m.cat)}</span>
+          <span class="muted" style="font-size:11.5px;margin-left:auto">▾</span>
+        </div>
+        <div class="model-body" style="display:${open ? "block" : "none"};margin-top:4px">${body}</div>
+      </div>`;
+  }
+
+  function renderModels(el, arg) {
+    const models = (cur.models || []).slice();
+    if (!models.length) { el.innerHTML = '<div class="empty">本科目暂无模型工具箱</div>'; return; }
+    if (arg) state.modelsQ = decodeURIComponent(arg);
+    state.modelsQ = state.modelsQ || "";
+    state.modelCat = state.modelCat || "";
+    const cats = [...new Set(models.map((m) => m.cat))];
+    el.innerHTML = `
+      <div class="note" style="margin-bottom:10px">🧰 <b>模型工具箱</b>：本科目相关的 ${models.length} 个商业模型（全库 28 个）。
+      每个模型含<b>怎么画/使用步骤/优势局限/IG 考法 vs AL 深度/竞赛应用/真题问法</b>；
+      📁 标注了备课文件夹里对应的本地课件（思铺备课/ 下的相对路径）。点击卡片展开。</div>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+        <input id="mq" style="flex:1;min-width:220px;padding:10px 14px;border-radius:999px;border:1px solid var(--line);outline:none;font-size:14px"
+               placeholder="搜索模型（中英/内容）…" value="${esc(state.modelsQ)}">
+        <span class="chip ${!state.modelCat ? "on" : ""}" data-cat="" style="cursor:pointer">全部</span>
+        ${cats.map((c) => `<span class="chip ${state.modelCat === c ? "on" : ""}" data-cat="${esc(c)}" style="cursor:pointer">${esc((CAT_ICON[c] || "") + " " + c)}</span>`).join("")}
+      </div>
+      <div id="model-list"></div>`;
+    $("#mq").addEventListener("input", (e) => { state.modelsQ = e.target.value; renderModelList(models); });
+    el.querySelectorAll(".chip[data-cat]").forEach((c) =>
+      c.addEventListener("click", () => {
+        state.modelCat = c.dataset.cat || "";
+        el.querySelectorAll(".chip[data-cat]").forEach((x) => x.classList.toggle("on", x === c));
+        renderModelList(models);
+      }));
+    renderModelList(models);
+  }
+
+  function renderModelList(models) {
+    const q = (state.modelsQ || "").trim().toLowerCase();
+    const list = models.filter((m) =>
+      (!state.modelCat || m.cat === state.modelCat) &&
+      (!q || [m.en, m.zh, m.cat, m.one, m.ig, m.al, m.comp, m.exam, m.example]
+        .some((x) => (x || "").toLowerCase().includes(q))));
+    const groups = {};
+    list.forEach((m) => ((groups[m.cat] = groups[m.cat] || []).push(m)));
+    $("#model-list").innerHTML = Object.entries(groups).map(([cat, arr]) => `
+      <div class="card pad" style="margin-bottom:14px">
+        <h3>${esc((CAT_ICON[cat] || "") + " " + cat)} <span class="muted" style="font-size:13px">${arr.length} 个模型</span></h3>
+        ${arr.map((m) => modelCard(m, false)).join("")}
+      </div>`).join("") || '<div class="empty">未找到匹配模型</div>';
+    document.querySelectorAll("#model-list .model-head").forEach((h) =>
+      h.addEventListener("click", () => {
+        const b = h.parentElement.querySelector(".model-body");
+        b.style.display = b.style.display === "none" ? "block" : "none";
+      }));
+  }
+
+  // ------------------------------------------------------------------ examq（常见考题）
+  function examqTopicChip(tid, on) {
+    const t = cur.topicById[tid];
+    const label = tid + (t ? " " + t.title_zh.slice(0, 10) : "");
+    return `<span class="chip ${on ? "on" : ""}" data-tid="${esc(tid)}" style="cursor:pointer">${esc(label)}</span>`;
+  }
+
+  function examqCard(q) {
+    const t = cur.topicById[q.topic];
+    const marks = q.marks ? `<span class="badge" style="background:#f59e0b22;color:#b45309">${q.marks} 分</span>` : "";
+    const meta = q.tag ? `<span class="muted" style="font-size:12px">${esc(q.tag)}</span>` :
+      `<span class="muted" style="font-size:12px">${q.year || ""} ${esc(q.session || "")}${q.level && q.level !== "Core/Ext" ? " · " + esc(q.level) : ""}${q.paper ? " · Paper " + q.paper : ""}${q.qno ? " · 第" + q.qno + "题(" + esc(q.part || "") + ")" : ""}</span>`;
+    const link = (href, label, bg, fg) => href ?
+      `<a href="${href}" target="_blank" class="pill" style="background:${bg};color:${fg}">${label}</a>` : "";
+    const answer = q.answer ? `
+      <div style="margin-top:8px;font-size:12.5px;line-height:1.65;color:var(--ink-2);border-left:3px solid #10b981;padding-left:8px">
+        <b style="color:#059669">✔ 答题要点</b>　${esc(q.answer)}</div>` : "";
+    const dup = q.dup > 1 ? `<span class="badge" style="background:#f1f5f9;color:#64748b" title="近年出现次数（按题目指纹）">近现 ${q.dup} 次</span>` : "";
+    return `
+      <div class="examq-item" style="border-bottom:1px solid var(--line);padding:10px 2px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:baseline">
+          ${marks}<span class="badge" style="background:#14b8a622;color:#0f766e">${esc(q.topic)}</span>
+          <a href="#/s/${curId}/tree/${encodeURIComponent(q.topic)}" class="badge"
+             style="background:#8b5cf61a;color:#7c3aed;text-decoration:none"
+             title="打开知识点卡片">${esc(t ? t.title_zh : "知识点卡 ↗")}</a>
+          ${dup}${meta}
+        </div>
+        <div style="margin-top:6px;font-size:13.5px;line-height:1.6">${esc(q.q)}</div>
+        ${q.aos ? `<div class="muted" style="margin-top:3px;font-size:12px">能力维度：${esc(q.aos)}</div>` : ""}
+        ${answer}
+        ${(q.qp_link || q.ms_link) ? `<div style="margin-top:7px;display:flex;gap:6px">
+          ${link(q.qp_link, "📝 原题 PDF", "var(--brand-soft)", "#0f766e")}
+          ${link(q.ms_link, "✔ 评分方案", "var(--amber-soft)", "#b45309")}</div>` : ""}
+      </div>`;
+  }
+
+  function renderExamq(el, arg) {
+    const ex = cur.examq || {};
+    const hasReal = ex.topics && Object.keys(ex.topics).length;
+    const hasCur = ex.curated && ex.curated.length;
+    if (!(state.examqTab === "real" && hasReal) && !(state.examqTab === "curated" && hasCur)) {
+      state.examqTab = hasReal ? "real" : (hasCur ? "curated" : null);
+      state.examqTopic = "";
+    }
+    el.innerHTML = `
+      <div class="note" style="margin-bottom:10px">🗂️ <b>常见考题</b>：从历年真题中切片的<b>真题原题</b>（配官方评分方案要点与原卷 PDF 直链）＋按官方卷型整理的<b>典型题解析</b>。
+      每题挂接<b>知识点卡片</b>（点击紫色徽章跳转），按主题与分值筛选高频题。</div>
+      <div id="examq-tabs" style="display:flex;gap:8px;margin-bottom:12px"></div>
+      <div id="examq-topicbar" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px"></div>
+      <div id="examq-patterns" style="margin-bottom:12px"></div>
+      <div id="examq-list"></div>`;
+    renderExamqInner(ex);
+  }
+
+  function renderExamqInner(ex) {
+    const tabs = [];
+    if (ex.topics && Object.keys(ex.topics).length) tabs.push(["real", "🗂️ 真题切片" + (ex.count ? `（${ex.count} 条原始切片）` : "")]);
+    if (ex.curated && ex.curated.length) tabs.push(["curated", "📋 典型题解析（官方卷型）"]);
+    $("#examq-tabs").innerHTML = tabs.map(([k, label]) =>
+      `<span class="chip ${state.examqTab === k ? "on" : ""}" data-tab="${k}" style="cursor:pointer">${esc(label)}</span>`).join(" ");
+    $("#examq-tabs").querySelectorAll(".chip").forEach((c) =>
+      c.addEventListener("click", () => { state.examqTab = c.dataset.tab; renderExamqInner(ex); }));
+
+    const bar = $("#examq-topicbar"), pat = $("#examq-patterns");
+    if (state.examqTab === "real") {
+      const tids = Object.keys(ex.topics || {}).sort();
+      bar.innerHTML = `<span class="chip ${!state.examqTopic ? "on" : ""}" data-tid="" style="cursor:pointer">全部主题</span>` +
+        tids.map((tid) => examqTopicChip(tid, state.examqTopic === tid)).join("");
+      bar.querySelectorAll(".chip").forEach((c) =>
+        c.addEventListener("click", () => { state.examqTopic = c.dataset.tid || ""; renderExamqInner(ex); }));
+      if (state.examqTopic && ex.patterns && ex.patterns[state.examqTopic]) {
+        const items = Object.entries(ex.patterns[state.examqTopic]);
+        pat.innerHTML = items.length ? `<div class="card pad" style="padding:10px 14px;font-size:12.5px">
+          <b>该主题常见题型</b>　${items.map(([k, n]) => `<span class="badge" style="background:#0ea5e91a;color:#0369a1">${esc(k)} ×${n}</span>`).join(" ")}</div>` : "";
+      } else pat.innerHTML = "";
+      const list = Object.entries(ex.topics || {})
+        .filter(([tid]) => !state.examqTopic || tid === state.examqTopic)
+        .flatMap(([tid, arr]) => arr);
+      list.sort((a, b) => (b.dup - a.dup) || (b.year - a.year) || (b.marks - a.marks));
+      $("#examq-list").innerHTML = list.map(examqCard).join("") || '<div class="empty">暂无切片</div>';
+    } else {
+      bar.innerHTML = "";
+      pat.innerHTML = ex.note ? `<div class="card pad" style="padding:10px 14px;font-size:12.5px;color:var(--ink-2)">${esc(ex.note)}</div>` : "";
+      $("#examq-list").innerHTML = (ex.curated || []).map(examqCard).join("") || '<div class="empty">暂无</div>';
+    }
   }
 
   // ------------------------------------------------------------------ quiz

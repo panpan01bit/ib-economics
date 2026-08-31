@@ -185,6 +185,31 @@ def main():
         print(f"  WARN bridge members not found: {invalid}")
     for s in subs:
         s["glossary"] = gdeep.enrich_subject_terms(s["id"], s["glossary"], glossary_ctx(s, bridge_links, bridge_meta))
+    # business model toolbox (attached to business + competition subjects)
+    import content_models
+    for s in subs:
+        mlist = [m for m in content_models.MODELS if s["id"] in m.get("subjects", [])]
+        if mlist:
+            s["models"] = mlist
+            print(f"  models[{s['id']}]: {len(mlist)}")
+    # common exam questions: real slices (ib-econ / igcse-bus) + curated per subject
+    import content_examq
+    for s in subs:
+        real_path = KB / f"examq-{s['id']}.json"
+        examq = {}
+        if real_path.exists():
+            with real_path.open(encoding="utf-8") as f:
+                examq = json.load(f)
+            examq.pop("subject", None)
+        curated = content_examq.EXAMQ_CURATED.get(s["id"])
+        if curated:
+            examq["curated"] = curated["items"]
+            if not examq.get("note"):
+                examq["note"] = curated["note"]
+        if examq:
+            n_real = examq.get("count", 0) or sum(len(v) for v in examq.get("topics", {}).values())
+            s["examq"] = examq
+            print(f"  examq[{s['id']}]: {n_real} real + {len(examq.get('curated', []))} curated")
     index = [{"id": s["id"], "name_zh": s["name_zh"], "name_en": s["name_en"],
               "accent": s["accent"],
               "units": len(s["syllabus"]), "topics": len(s["topics"]),

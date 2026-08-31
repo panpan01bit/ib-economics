@@ -146,12 +146,17 @@ IGCSE_BUS = {
         ]},
     ],
     "assessment": {
-        "note": "CIE 0450（2020+ 考纲；以当季 syllabus 为准）",
+        "note": "CIE 0450 官方大纲（2026 版，已核对原文 PDF）：两卷各 1h30m/80 分/50%，全部外考无 coursework，"
+                "约 130 导学小时。答题直接写在试卷上，全部必答无选做。注意：2027 年 3 月首考起科目代码改为 0264「Business」。",
+        "ao": {"AO1 知识理解": "总 40%（P1 50% / P2 30%）", "AO2 应用": "总 20%（两卷均 20%）",
+               "AO3 分析": "总 25%（P1 20% / P2 30%）", "AO4 评价": "总 15%（P1 10% / P2 20%）"},
+        "command_words": ["Calculate 计算", "Consider 审视并回应", "Define 定义", "Explain 解释", "Identify 指出",
+                          "Justify 论证", "Outline 概述", "State 陈述"],
         "components": [
             {"id": "p1", "name_zh": "Paper 1 · 短答与数据回应", "time": "1h30m", "marks": 80, "weight": 50,
-             "note_zh": "4 题 × 20 分：(a) 定义 2 分 (b) 4 分 (c) 解释 6 分 (d) 论证/建议 8 分（重评估）。"},
+             "note_zh": "4 题 × 20 分：(a) 定义 2 分 (b) 4 分 (c) 解释 6 分 (d) 论证/建议 8 分（重评估）。每题配刺激材料（表格/图形/图片），作答常需引用材料。"},
             {"id": "p2", "name_zh": "Paper 2 · 案例分析", "time": "1h30m", "marks": 80, "weight": 50,
-             "note_zh": "基于案例 insert 的 4 题 × 20 分，结构同 P1，重应用与评估。"},
+             "note_zh": "基于案例 insert 的 4 题 × 20 分，结构同 P1；案例附录含表格/图形/新闻摘录/广告等多种数据形态，重应用（AO2）与评估（AO4，占 20%）。"},
         ]},
     "glossary": [
         {"term_en": "Added value", "term_zh": "增值", "topic": "IG1.1", "def_zh": "产出价值−购入成本。"},

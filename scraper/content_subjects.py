@@ -472,14 +472,24 @@ AL_BUS = {
         ]},
     ],
     "assessment": {
-        "note": "以 CIE 9609 近年考纲为参考（具体以当季 syllabus 为准）",
+        "note": "CIE 9609 官方大纲（2026-2028 版，已核对原文 PDF）。三种考试路径：①只考 AS（P1+P2 同季）→ 小写 a-e 等级；"
+                "②分段 A Level（Y1 考 AS，Y2 只考 P3+P4）；③同季线性 A Level（P1-P4 四卷一次考完）→ A*-E。"
+                "AS 约 180 导学小时，完整 A Level 约 360 小时。",
+        "prev_note": "2023-2025 旧大纲为三卷制：P2 1h45m、P3 3h/100 分占 50%（无 P4）。2026 起 P2 缩至 1h30m、"
+                     "P3 改 1h45m/60 分、新增 P4 商业战略卷。当前在读学生务必确认自己的考试年份适用哪版大纲。",
+        "ao": {"AO1 知识理解": "AS 30% / AL 25%", "AO2 应用": "AS 30% / AL 25%",
+               "AO3 分析": "AS 20% / AL 25%", "AO4 评价": "AS 20% / AL 25%"},
+        "command_words": ["Advise 建议行动", "Analyse 分析", "Assess 评判", "Calculate 计算", "Define 定义",
+                          "Evaluate 评价", "Explain 解释", "Identify 指出", "Justify 论证", "To what extent 在多大程度上"],
         "components": [
-            {"id": "p1", "name_zh": "Paper 1 · 商业概念 (AS)", "time": "1h15m", "weight": 20,
-             "note_zh": "简答+短论述。"},
-            {"id": "p2", "name_zh": "Paper 2 · 数据回应 (AS)", "time": "1h30m", "weight": 30,
-             "note_zh": "基于数据的案例分析。"},
-            {"id": "p3", "name_zh": "Paper 3 · 商业决策 (A2)", "time": "3h", "weight": 50,
-             "note_zh": "大案例+决策建议+论述，覆盖 A2 全部内容。"},
+            {"id": "p1", "name_zh": "Paper 1 · Business Concepts 1 (AS)", "time": "1h15m", "marks": 40, "weight": 20,
+             "note_zh": "Section A：4 道必答 5 分短答（前 3 题各两小问）；Section B：2 选 1 的 20 分 essay（两段式，第二段必须体现 AO4 评价）。考 AS 内容 1.1-5.5。"},
+            {"id": "p2", "name_zh": "Paper 2 · Business Concepts 2 (AS)", "time": "1h30m", "marks": 60, "weight": 30,
+             "note_zh": "2 道必答数据回应题（各 30 分、6 小问），末小问须体现评价（AO4）。文字/数字/图表混合材料。考 AS 内容。"},
+            {"id": "p3", "name_zh": "Paper 3 · Business Decision-Making (A2)", "time": "1h45m", "marks": 60, "weight": 30,
+             "note_zh": "案例卷：5 道必答 8/8/16/16/12 分（Q3 三小问、Q4 两小问，末小问重评价；Q5 为 12 分整题决策建议）。考 A2 内容 6.1-10.4，AS 为 assumed knowledge。"},
+            {"id": "p4", "name_zh": "Paper 4 · Business Strategy (A2)", "time": "1h15m", "marks": 40, "weight": 20,
+             "note_zh": "2026 新增：基于案例的 2 道必答 20 分 essay，均须体现评价（AO4）。考 A2 内容，是战略工具（SWOT/五力/Ansoff/BCG 等）的主战场。"},
         ]},
     "glossary": [
         {"term_en": "Franchise", "term_zh": "特许经营", "topic": "AB1.1", "def_zh": "购买成熟品牌与经营模式的授权。"},
